@@ -16,6 +16,19 @@ resources:
 # please also update base/cache-deployer/cluster-scoped/cache-deployer-clusterrolebinding.yaml
 namespace: kubeflow
 
+# Local change: drop the namespace-wide "allow same namespace only" NetworkPolicy
+# added in KFP 2.15. It applies to every pod in the kubeflow namespace and blocks
+# traffic from istio-ingressgateway (istio-system) and from profile namespaces,
+# which breaks the central dashboard and pipeline runs.
+patches:
+- patch: |-
+    $patch: delete
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: default-allow-same-namespace
+      namespace: kubeflow
+
 # Identifier for application manager to apply ownerReference.
 # The ownerReference ensures the resources get garbage collected
 # when application is deleted.
