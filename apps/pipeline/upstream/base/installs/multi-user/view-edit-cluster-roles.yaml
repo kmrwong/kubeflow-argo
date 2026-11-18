@@ -44,7 +44,7 @@ rules:
   - pipelines.kubeflow.org
   resources:
   - pipelines
-  - pipelines/versions
+  - pipelineversions
   verbs:
   - create
   - delete
@@ -97,6 +97,7 @@ rules:
   - workflows/finalizers
   - workfloweventbindings
   - workflowtemplates
+  - workflowtaskresults
 
 ---
 
@@ -111,7 +112,7 @@ rules:
   - pipelines.kubeflow.org
   resources:
   - pipelines
-  - pipelines/versions
+  - pipelineversions
   - experiments
   - jobs
   verbs:

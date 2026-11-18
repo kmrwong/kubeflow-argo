@@ -1,6 +1,6 @@
 # Install Kubeflow Pipelines Standalone using Kustomize Manifests
 
-This folder contains [Kubeflow Pipelines Standalone](https://www.kubeflow.org/docs/components/pipelines/installation/standalone-deployment/) 
+This folder contains [Kubeflow Pipelines Standalone](https://www.kubeflow.org/docs/components/pipelines/installation/standalone-deployment/)
 Kustomize manifests.
 
 Kubeflow Pipelines Standalone is one option to install Kubeflow Pipelines. You can review all other options in
@@ -18,9 +18,9 @@ Install:
 
 ```bash
 KFP_ENV=platform-agnostic
-kubectl apply -k cluster-scoped-resources/
+kustomize build cluster-scoped-resources/ | kubectl apply -f -
 kubectl wait crd/applications.app.k8s.io --for condition=established --timeout=60s
-kubectl apply -k "env/${KFP_ENV}/"
+kustomize build "env/${KFP_ENV}/" | kubectl apply -f -
 kubectl wait pods -l application-crd-id=kubeflow-pipelines -n kubeflow --for condition=Ready --timeout=1800s
 kubectl port-forward -n kubeflow svc/ml-pipeline-ui 8080:80
 ```
@@ -40,20 +40,6 @@ Data:
 
 Application data are persisted in in-cluster PersistentVolumeClaim storage.
 
-### (env/gcp) install on Google Cloud with Cloud Storage and Cloud SQL
-
-Cloud Storage and Cloud SQL are better for operating a production cluster.
-
-Refer to [Google Cloud Instructions](sample/README.md) for installation.
-
-### (env/aws) install on AWS with S3 and RDS MySQL
-
-S3 and RDS MySQL are better for operating a production cluster.
-
-Refer to [AWS Instructions](env/aws/README.md) for installation.
-
-Note: Community maintains a different opinionated installation manifests for AWS, refer to [e2fyi/kubeflow-aws](https://github.com/e2fyi/kubeflow-aws/tree/master/pipelines).
-
 ## Uninstall
 
 If the installation is based on CloudSQL/GCS, after the uninstall, the data is still there,
@@ -65,8 +51,6 @@ reinstall a newer version can reuse the data.
 kubectl kustomize env/platform-agnostic | kubectl delete -f -
 # or
 kubectl kustomize env/dev | kubectl delete -f -
-# or
-kubectl kustomize env/gcp | kubectl delete -f -
 # or
 kubectl delete applications/pipeline -n kubeflow
 
