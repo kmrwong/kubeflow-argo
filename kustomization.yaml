@@ -23,7 +23,6 @@ resources:
 - argocd-apps/user-namespace.yaml
 - argocd-apps/volumes.yaml
 - argocd-apps/mlflow.yaml
-- argocd-apps/notebook.yaml
 - argocd-apps/notebook-controller.yaml
 # - argocd-apps/experimental-pvcviewer-controller.yaml
 # - argocd-apps/experimental-volumes-web-app.yaml
