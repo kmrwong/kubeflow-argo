@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: mlflow
-        image: kmrwong88/mlflow:v1
+        image: kmrwong88/mlflow:v2
         imagePullPolicy: IfNotPresent
         command: ["mlflow", "server",
                   "--host", "0.0.0.0", "--port", "5000",
