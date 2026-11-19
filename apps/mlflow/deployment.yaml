@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow
+  namespace: kubeflow  
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: mlflow } }
+  template:
+    metadata: { labels: { app: mlflow } }
+    spec:
+      containers:
+      - name: mlflow
+        image: kmrwong88/mlflow:v1
+        imagePullPolicy: IfNotPresent
+        command: ["mlflow", "server",
+                  "--host", "0.0.0.0", "--port", "5000",
+                  "--backend-store-uri", "postgresql://postgres:$(PGPASSWORD)@postgres-release-postgresql.postgres:5432/mlflow",
+                  "--artifacts-destination", "s3://mlflow/artifacts"]
+        ports: [{ containerPort: 5000 }]
+        env:
+        - name: MLFLOW_S3_ENDPOINT_URL
+          value: http://seaweedfs.kubeflow:8333
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom: { secretKeyRef: { name: mlpipeline-minio-artifact, key: accesskey } }
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom: { secretKeyRef: { name: mlpipeline-minio-artifact, key: secretkey } }
+        - name: PGPASSWORD
+          valueFrom: { secretKeyRef: { name: mlflow-postgres, key: postgres-password } }
+
