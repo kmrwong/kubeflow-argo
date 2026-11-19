@@ -11,6 +11,7 @@ spec:
     path: common/user-namespace/base
   destination:
     server: https://kubernetes.default.svc
+    namespace: kubeflow
   syncPolicy:
     automated:
       prune: true
